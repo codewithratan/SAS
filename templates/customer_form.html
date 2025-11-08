@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Harkrishan Gallery and Services{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">{{ title }}</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.name.label(class="form-label required") }}
+                                {{ form.name(class="form-control" + (' is-invalid' if form.name.errors else '')) }}
+                                {% if form.name.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.name.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.contact_number.label(class="form-label required") }}
+                                {{ form.contact_number(class="form-control" + (' is-invalid' if form.contact_number.errors else '')) }}
+                                {% if form.contact_number.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.contact_number.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.email.label(class="form-label") }}
+                                {{ form.email(class="form-control" + (' is-invalid' if form.email.errors else '')) }}
+                                {% if form.email.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.email.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="form-group">
+                            {{ form.address.label(class="form-label") }}
+                            {{ form.address(class="form-control" + (' is-invalid' if form.address.errors else ''), rows=3) }}
+                            {% if form.address.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.address.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('index') }}" class="btn btn-secondary me-md-2">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> {{ form.submit.label.text }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

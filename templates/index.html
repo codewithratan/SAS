@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Harkrishan Gallery and Services{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <h1 class="display-4">Welcome to Harkrishan Gallery and Services</h1>
+                <p class="lead">Efficient service management for all your device repair needs</p>
+                <hr class="my-4">
+                <div class="row mt-4">
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h2 class="display-6"><i class="bi bi-person-plus"></i></h2>
+                                <h5 class="card-title">New Customer</h5>
+                                <p class="card-text">Add a new customer to the system</p>
+                                <a href="{{ url_for('new_customer') }}" class="btn btn-primary">Add Customer</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h2 class="display-6"><i class="bi bi-tools"></i></h2>
+                                <h5 class="card-title">New Service Request</h5>
+                                <p class="card-text">Create a new service request for a device</p>
+                                <a href="{{ url_for('new_service_request') }}" class="btn btn-primary">Create Request</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h2 class="display-6"><i class="bi bi-search"></i></h2>
+                                <h5 class="card-title">Search Records</h5>
+                                <p class="card-text">Find customers and service requests</p>
+                                <a href="{{ url_for('search') }}" class="btn btn-primary">Search Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Recent Service Requests</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_requests %}
+                    <div class="list-group">
+                        {% for req in recent_requests %}
+                            <a href="{{ url_for('view_service_request', request_id=req.id) }}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ req.brand }} {{ req.model_name }}</h6>
+                                    <small>{{ req.date_received.strftime('%b %d, %Y') }}</small>
+                                </div>
+                                <p class="mb-1">{{ req.problem_description|truncate(100) }}</p>
+                                <small class="text-muted">Customer: {{ req.customer.name }} • Status: {{ req.status }}</small>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">No recent service requests found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('export_to_excel') }}" class="btn btn-outline-primary btn-lg mb-3">
+                        <i class="bi bi-file-earmark-excel"></i> Export to Excel
+                    </a>
+                    <a href="#" class="btn btn-outline-secondary btn-lg mb-3">
+                        <i class="bi bi-printer"></i> Print Job Cards
+                    </a>
+                    <a href="#" class="btn btn-outline-info btn-lg">
+                        <i class="bi bi-graph-up"></i> View Reports
+                    </a>
+                </div>
+                
+                <hr class="my-4">
+                
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6>System Status</h6>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Database:</span>
+                            <span class="badge bg-success">Connected</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Last Backup:</span>
+                            <span>{{ last_backup_time if last_backup_time else 'Never' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}Search - Harkrishan Gallery and Services{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Search Records</h4>
+            </div>
+            <div class="card-body">
+                <form method="GET" action="{{ url_for('search') }}" class="mb-4">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control form-control-lg" 
+                               placeholder="Search by name, contact, IMEI, brand, or model..." 
+                               value="{{ query if query else '' }}" required>
+                        <button class="btn btn-primary" type="submit">
+                            <i class="bi bi-search"></i> Search
+                        </button>
+                    </div>
+                    <div class="form-text mt-2">
+                        <i class="bi bi-info-circle"></i> Search for customers or service requests by any related information.
+                    </div>
+                </form>
+                
+                {% if query %}
+                    <h5 class="mb-3">Search Results for "{{ query }}"</h5>
+                    
+                    {% if not customers and not service_requests %}
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> No results found for your search query.
+                        </div>
+                    {% else %}
+                        {% if customers %}
+                            <div class="mb-4">
+                                <h6 class="border-bottom pb-2 mb-3">Customers ({{ customers|length }})</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Name</th>
+                                                <th>Contact</th>
+                                                <th>Email</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for customer in customers %}
+                                                <tr>
+                                                    <td>{{ customer.id }}</td>
+                                                    <td>{{ customer.name }}</td>
+                                                    <td>{{ customer.contact_number }}</td>
+                                                    <td>{{ customer.email or 'N/A' }}</td>
+                                                    <td>
+                                                        <a href="{{ url_for('customer_details', customer_id=customer.id) }}" 
+                                                           class="btn btn-sm btn-outline-primary"
+                                                           data-bs-toggle="tooltip" 
+                                                           title="View Customer">
+                                                            <i class="bi bi-eye"></i>
+                                                        </a>
+                                                        <a href="{{ url_for('new_service_request', customer_id=customer.id) }}" 
+                                                           class="btn btn-sm btn-outline-success"
+                                                           data-bs-toggle="tooltip" 
+                                                           title="New Service Request">
+                                                            <i class="bi bi-plus-circle"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if service_requests %}
+                            <div class="mt-4">
+                                <h6 class="border-bottom pb-2 mb-3">Service Requests ({{ service_requests|length }})</h6>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Job #</th>
+                                                <th>Customer</th>
+                                                <th>Device</th>
+                                                <th>Problem</th>
+                                                <th>Status</th>
+                                                <th>Received</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for req in service_requests %}
+                                                <tr>
+                                                    <td>{{ req.id }}</td>
+                                                    <td>{{ req.customer.name }}</td>
+                                                    <td>{{ req.brand }} {{ req.model_name }}</td>
+                                                    <td>{{ req.problem_description|truncate(50) }}</td>
+                                                    <td>
+                                                        <span class="badge bg-{{ 'success' if req.status == 'Completed' else 'warning' if req.status == 'In Progress' else 'info' }}">
+                                                            {{ req.status }}
+                                                        </span>
+                                                    </td>
+                                                    <td>{{ req.date_received.strftime('%Y-%m-%d') }}</td>
+                                                    <td>
+                                                        <a href="{{ url_for('view_service_request', request_id=req.id) }}" 
+                                                           class="btn btn-sm btn-outline-primary"
+                                                           data-bs-toggle="tooltip" 
+                                                           title="View Details">
+                                                            <i class="bi bi-eye"></i>
+                                                        </a>
+                                                        <a href="{{ url_for('generate_pdf', request_id=req.id) }}" 
+                                                           class="btn btn-sm btn-outline-secondary"
+                                                           data-bs-toggle="tooltip" 
+                                                           title="Download PDF">
+                                                            <i class="bi bi-download"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    <div class="text-center py-5">
+                        <div class="mb-4">
+                            <i class="bi bi-search" style="font-size: 3rem; color: #6c757d;"></i>
+                        </div>
+                        <h5>Search for Customers or Service Requests</h5>
+                        <p class="text-muted">Enter a search term in the box above to find customers or service requests.</p>
+                        <div class="mt-4">
+                            <div class="row">
+                                <div class="col-md-6 offset-md-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6>Search Tips:</h6>
+                                            <ul class="text-start">
+                                                <li>Search by customer name or phone number</li>
+                                                <li>Find devices by brand or model</li>
+                                                <li>Search by IMEI number</li>
+                                                <li>Use keywords from problem descriptions</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Initialize tooltips
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
+        // Focus the search input when the page loads if there's a query
+        {% if query %}
+            document.querySelector('input[name="q"]').focus();
+        {% endif %}
+    });
+</script>
+{% endblock %}
