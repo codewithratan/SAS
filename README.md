@@ -109,7 +109,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-For support, please contact the development team at [your-email@example.com].
+For support, please contact the development team .
 
 ---
 
