@@ -95,6 +95,87 @@ hgs-service-management/
     └── service_view.html  # Service request details
 ```
 
+## Deployment to Render
+
+This application is configured for easy deployment to Render.com:
+
+### Prerequisites
+- A GitHub account
+- A Render account (free tier available at https://render.com)
+
+### Deployment Steps
+
+1. **Push your code to GitHub**
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git branch -M main
+   git remote add origin <your-github-repo-url>
+   git push -u origin main
+   ```
+
+2. **Deploy on Render**
+   - Go to https://render.com and sign in
+   - Click "New +" and select "Blueprint"
+   - Connect your GitHub repository
+   - Render will automatically detect the `render.yaml` file
+   - Click "Apply" to create both the web service and PostgreSQL database
+   - Wait for the build to complete (5-10 minutes)
+
+3. **Access Your Application**
+   - Once deployed, Render will provide you with a URL (e.g., `https://solar-saarthi.onrender.com`)
+   - Your application will be live and accessible!
+
+### Environment Variables
+The following environment variables are automatically configured:
+- `FLASK_ENV`: Set to `production`
+- `SECRET_KEY`: Auto-generated secure key
+- `DATABASE_URL`: Automatically linked to PostgreSQL database
+
+### Important Notes
+- **Free tier limitations**: The free tier may spin down after inactivity and take 30-60 seconds to restart
+- **Database**: PostgreSQL database is automatically created and linked
+- **Migrations**: Database tables are automatically created during deployment
+
+### Alternative: Manual Deployment
+
+If you prefer manual setup:
+
+1. Create a new Web Service on Render
+2. Connect your repository
+3. Configure:
+   - **Build Command**: `./build.sh`
+   - **Start Command**: `gunicorn run:app`
+   - **Environment**: Python 3
+4. Add a PostgreSQL database
+5. Link the database to your web service
+
+## Local Development
+
+To run locally after deployment setup:
+
+```bash
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your local settings
+
+# Initialize database
+flask db init
+flask db migrate -m "Initial migration"
+flask db upgrade
+
+# Run the application
+python run.py
+```
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -109,8 +190,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-For support, please contact the development team at [your-email@example.com].
+For support, please contact the development team.
 
 ---
 
-**Harkrishan Gallery and Services** © 2023
+**Harkrishan Gallery and Services** © 2025

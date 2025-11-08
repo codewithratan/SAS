@@ -1,0 +1,26 @@
+services:
+  # Web Service
+  - type: web
+    name: solar-saarthi
+    env: python
+    region: singapore
+    plan: free
+    branch: main
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn run:app"
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.11.0
+    
+  # PostgreSQL Database
+  - type: pgsql
+    name: solar-saarthi-db
+    region: singapore
+    plan: free
+    databaseName: solar_saarthi_db
+    databaseUser: solar_saarthi_user
+    ipAllowList: []
